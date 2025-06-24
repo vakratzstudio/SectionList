@@ -1,11 +1,58 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, SectionList, View } from "react-native";
+import { Section } from "./src/components/Section";
+import { mockData, renderCard, CardItem } from "./src/mockData";
 
 export default function App() {
+  // Render each section with its cards
+  const renderSection = ({
+    section,
+    isFirst,
+    isLast,
+  }: {
+    section: { data: CardItem[]; id: string; title: string };
+    isFirst: boolean;
+    isLast: boolean;
+  }) => {
+    const alignment =
+      parseInt(section.id.split("-")[1]) % 2 === 0 ? "LEFT" : "RIGHT";
+
+    return (
+      <Section
+        key={section.id}
+        isFirstInList={isFirst}
+        isLastInList={isLast}
+        alignment={alignment}
+      >
+        {section.data.map((item, index) => (
+          <View
+            key={item.id}
+            style={{ marginBottom: index < section.data.length - 1 ? 16 : 0 }}
+          >
+            {renderCard(item)}
+          </View>
+        ))}
+      </Section>
+    );
+  };
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <SectionList
+        sections={mockData}
+        keyExtractor={(item) => item.id}
+        renderItem={() => null} // We'll handle rendering items in renderSection
+        renderSectionHeader={({ section }) => {
+          const sectionIndex = mockData.findIndex((s) => s.id === section.id);
+          return renderSection({
+            section,
+            isFirst: sectionIndex === 0,
+            isLast: sectionIndex === mockData.length - 1,
+          });
+        }}
+        renderSectionFooter={() => null}
+        stickySectionHeadersEnabled={false}
+      />
     </View>
   );
 }
@@ -13,8 +60,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#f8f8f8",
+    paddingTop: 40,
   },
 });
