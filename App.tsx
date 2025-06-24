@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, SectionList, View } from "react-native";
-import { Section } from "./src/components/Section";
+import { Section, Alignment } from "./src/components/Section";
 import { mockData, renderCard, CardItem } from "./src/mockData";
 
 export default function App() {
@@ -15,7 +15,7 @@ export default function App() {
     isLast: boolean;
   }) => {
     const alignment =
-      parseInt(section.id.split("-")[1]) % 2 === 0 ? "LEFT" : "RIGHT";
+      parseInt(section.id.split("-")[1]) % 2 === 0 ? Alignment.LEFT : Alignment.RIGHT;
 
     return (
       <Section
