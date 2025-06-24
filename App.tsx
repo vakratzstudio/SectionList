@@ -41,15 +41,19 @@ export default function App() {
       <SectionList
         sections={mockData}
         keyExtractor={(item) => item.id}
-        renderItem={() => null} // We'll handle rendering items in renderSection
-        renderSectionHeader={({ section }) => {
+        renderItem={({ item, section, index }) => {
           const sectionIndex = mockData.findIndex((s) => s.id === section.id);
-          return renderSection({
-            section,
-            isFirst: sectionIndex === 0,
-            isLast: sectionIndex === mockData.length - 1,
-          });
+          // Only render the section for the first item in each section
+          if (index === 0) {
+            return renderSection({
+              section,
+              isFirst: sectionIndex === 0,
+              isLast: sectionIndex === mockData.length - 1,
+            });
+          }
+          return null;
         }}
+        renderSectionHeader={() => null}
         renderSectionFooter={() => null}
         stickySectionHeadersEnabled={false}
       />
