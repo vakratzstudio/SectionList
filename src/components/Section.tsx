@@ -2,9 +2,8 @@ import React, { ReactNode } from "react";
 import { View, StyleSheet, StyleProp, ViewStyle, Text } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
-
 export enum Alignment {
-  LEFT ,
+  LEFT,
   RIGHT,
 }
 
@@ -30,7 +29,10 @@ export const Section: React.FC<SectionProps> = ({
         <View
           style={[
             styles.half,
-            { backgroundColor: alignment === Alignment.RIGHT ? "#2196F3" : "#FFFFFF" },
+            {
+              backgroundColor:
+                alignment === Alignment.RIGHT ? "#2196F3" : "#FFFFFF",
+            },
           ]}
         />
       </View>
@@ -40,8 +42,8 @@ export const Section: React.FC<SectionProps> = ({
         <LinearGradient
           colors={
             alignment === Alignment.RIGHT
-              ? ["#FFFFFF", "#BBDEFB"] // Blue to light blue for LEFT
-              : ["#2196F3", "#BBDEFB"] // Light blue to white for RIGHT
+              ? ["#FFFFFF", "#BBDEFB"] // White to light blue for right alignment
+              : ["#2196F3", "#BBDEFB"] // Dark blue to light blue for left alignment
           }
           style={[
             { width: "100%", padding: 16 },
