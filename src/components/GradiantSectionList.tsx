@@ -5,11 +5,6 @@ import { LinearGradient } from "expo-linear-gradient";
 import chroma from "chroma-js";
 import { SectionItem, CardItem, renderCard } from "../mockData";
 
-export enum Alignment {
-  LEFT,
-  RIGHT,
-}
-
 type FlatCard = {
   card: CardItem;
   sectionIndex: number;
