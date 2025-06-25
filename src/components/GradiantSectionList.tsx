@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useCallback } from "react";
 import { View, StyleSheet, ViewStyle } from "react-native";
 import { FlashList } from "@shopify/flash-list";
 import { LinearGradient } from "expo-linear-gradient";
@@ -22,44 +22,51 @@ type Props = {
 };
 
 export default function GradientSectionList({ sections }: Props) {
+  // Memoize sections length to prevent unnecessary recalculations
+  const sectionsLength = sections.length;
+
   // Flatten cards only (no headers)
   const flatData: FlatCard[] = useMemo(() => {
     const result: FlatCard[] = [];
     sections.forEach((section, sIndex) => {
-      section.data.forEach((card, cIndex) => {
+      const { data } = section;
+      const totalCards = data.length;
+      data.forEach((card, cIndex) => {
         result.push({
           card,
           sectionIndex: sIndex,
           cardIndex: cIndex,
-          totalCards: section.data.length,
+          totalCards,
         });
       });
     });
     return result;
   }, [sections]);
 
-  const getBaseColors = (sectionIndex: number): [string, string] => {
-    const alignment = sectionIndex % 2 === 0 ? Alignment.RIGHT : Alignment.LEFT;
-    return alignment === Alignment.RIGHT
-      ? ["#FFFFFF", "#BBDEFB"]
-      : ["#2196F3", "#BBDEFB"];
-  };
+  // Memoize gradient scale creation to avoid recreating it on every render
+  const gradientScales = useMemo(() => {
+    const rightScale = chroma.scale(["#FFFFFF", "#BBDEFB"]).mode("lab");
+    const leftScale = chroma.scale(["#2196F3", "#BBDEFB"]).mode("lab");
+    return { rightScale, leftScale };
+  }, []);
 
-  const getGradientColorsForCard = (
+  // Memoize gradient color calculation
+  const getGradientColorsForCard = useCallback((
     sectionIndex: number,
     cardIndex: number,
     totalCards: number
   ): [string, string] => {
-    const baseColors = getBaseColors(sectionIndex);
-    const scale = chroma.scale(baseColors).mode("lab");
-
+    const isRightAligned = sectionIndex % 2 === 0;
+    const scale = isRightAligned ? gradientScales.rightScale : gradientScales.leftScale;
+    
     const startRatio = cardIndex / totalCards;
     const endRatio = (cardIndex + 1) / totalCards;
 
     return [scale(startRatio).hex(), scale(endRatio).hex()];
-  };
+  }, [gradientScales]);
 
-  const getBorderRadius = (
+  // Memoize border radius calculation
+  const getBorderRadius = useCallback((
     cardIndexInSection: number,
     totalCardsInSection: number,
     sectionIndex: number
@@ -67,7 +74,7 @@ export default function GradientSectionList({ sections }: Props) {
     const isFirstCard = cardIndexInSection === 0;
     const isLastCard = cardIndexInSection === totalCardsInSection - 1;
     const isFirstSection = sectionIndex === 0;
-    const isLastSection = sectionIndex === sections.length - 1;
+    const isLastSection = sectionIndex === sectionsLength - 1;
     const isRightAligned = sectionIndex % 2 === 0;
     
     const getRadius = (isEdge: boolean, isRight: boolean) => {
@@ -82,9 +89,10 @@ export default function GradientSectionList({ sections }: Props) {
       borderBottomRightRadius: !isLastSection && isLastCard ? getRadius(false, isRightAligned) : 0,
       overflow: "hidden",
     };
-  };
+  }, [sectionsLength]);
 
-  const renderItem = ({ item }: { item: FlatCard }) => {
+  // Memoize the renderItem function to prevent recreation on each render
+  const renderItem = useCallback(({ item }: { item: FlatCard }) => {
     const colors = getGradientColorsForCard(
       item.sectionIndex,
       item.cardIndex,
@@ -97,24 +105,13 @@ export default function GradientSectionList({ sections }: Props) {
       item.sectionIndex
     );
 
-    const alignment =
-      item.sectionIndex % 2 === 0 ? Alignment.RIGHT : Alignment.LEFT;
+    const isRightAligned = item.sectionIndex % 2 === 0;
+    const backgroundColor = isRightAligned ? "#2196F3" : "#FFFFFF";
 
     return (
       <View style={styles.wrapper}>
-        {/* Top half background */}
         <View style={styles.topHalf} />
-        {/* Bottom half background */}
-        <View
-          style={[
-            styles.bottomHalf,
-            {
-              backgroundColor:
-                alignment === Alignment.RIGHT ? "#2196F3" : "#FFFFFF",
-            },
-          ]}
-        />
-        {/* Card on top */}
+        <View style={[styles.bottomHalf, { backgroundColor }]} />
         <LinearGradient
           colors={colors}
           start={{ x: 0, y: 0 }}
@@ -125,7 +122,7 @@ export default function GradientSectionList({ sections }: Props) {
         </LinearGradient>
       </View>
     );
-  };
+  }, [getGradientColorsForCard, getBorderRadius]);
 
   return (
     <FlashList
