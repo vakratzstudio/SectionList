@@ -2,7 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, SectionList, View } from "react-native";
 import { Section, Alignment } from "./src/components/Section";
 import { mockData, renderCard, CardItem } from "./src/mockData";
-import FlattenedSectionList from "./src/components/GradiantSectionList";
+import FlattenedSectionList from "./src/components/FlattenedSectionList";
 
 export default function App() {
   // Render each section with its cards

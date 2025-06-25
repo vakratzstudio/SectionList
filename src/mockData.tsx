@@ -14,14 +14,22 @@ export interface SectionItem {
 }
 
 const generateCards = (count: number, sectionIndex: number): CardItem[] => {
-  return Array.from({ length: count }, (_, i) => ({
-    id: `section-${sectionIndex}-card-${i}`,
-    title: `Card ${i + 1}`,
-    content:
-      `This is card ${i + 1} in section ${sectionIndex + 1}. ` +
-      `It contains some sample content to demonstrate the layout. ` +
-      `Each card can have different amounts of content and different heights.`,
-  }));
+  return Array.from({ length: count }, (_, i) => {
+    const repeatCount = Math.floor(Math.random() * 8) + 1; // 1 to 8 times
+    const repeatedContent = Array.from({ length: repeatCount })
+      .fill(
+        `This is card ${i + 1} in section ${
+          sectionIndex + 1
+        }. It contains some sample content to demonstrate the layout. `
+      )
+      .join(" ");
+
+    return {
+      id: `section-${sectionIndex}-card-${i}`,
+      title: `Card ${i + 1}`,
+      content: repeatedContent,
+    };
+  });
 };
 
 export const mockData: SectionItem[] = [
@@ -58,7 +66,6 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 16,
     backgroundColor: "white",
-    marginVertical: 8,
   },
   cardTitle: {
     fontSize: 18,

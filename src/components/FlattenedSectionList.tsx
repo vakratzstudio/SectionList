@@ -1,15 +1,32 @@
-import React, { useMemo, useCallback } from "react";
-import { View, StyleSheet, ViewStyle } from "react-native";
+import React, { useMemo, useCallback, useState, useRef } from "react";
+import {
+  View,
+  StyleSheet,
+  ViewStyle,
+  Text,
+  LayoutChangeEvent,
+} from "react-native";
 import { FlashList } from "@shopify/flash-list";
 import { LinearGradient } from "expo-linear-gradient";
 import chroma from "chroma-js";
 import { SectionItem, CardItem, renderCard } from "../mockData";
+
+type CardLayout = {
+  height: number;
+  y: number;
+};
+
+type SectionLayout = {
+  height: number;
+  cards: Record<number, CardLayout>;
+};
 
 type FlatCard = {
   card: CardItem;
   sectionIndex: number;
   cardIndex: number;
   totalCards: number;
+  sectionId: string;
 };
 
 type Props = {
@@ -20,11 +37,16 @@ export default function FlattenedSectionList({ sections }: Props) {
   // Memoize sections length to prevent unnecessary recalculations
   const sectionsLength = sections.length;
 
-  // Flatten cards only (no headers)
+  // Track section and card layouts
+  const [sectionLayouts, setSectionLayouts] = useState<
+    Record<string, SectionLayout>
+  >({});
+
+  // Flatten cards and track section info
   const flatData: FlatCard[] = useMemo(() => {
     const result: FlatCard[] = [];
     sections.forEach((section, sIndex) => {
-      const { data } = section;
+      const { data, id: sectionId } = section;
       const totalCards = data.length;
       data.forEach((card, cIndex) => {
         result.push({
@@ -32,11 +54,46 @@ export default function FlattenedSectionList({ sections }: Props) {
           sectionIndex: sIndex,
           cardIndex: cIndex,
           totalCards,
+          sectionId,
         });
       });
     });
     return result;
   }, [sections]);
+
+  // Update card layout when a card's height is measured
+  const onCardLayout = useCallback(
+    (
+      event: LayoutChangeEvent,
+      cardIndex: number,
+      sectionId: string,
+      totalCards: number
+    ) => {
+      const { height } = event.nativeEvent.layout;
+
+      setSectionLayouts((prev) => {
+        const section = prev[sectionId] || { height: 0, cards: {} };
+
+        // Calculate section height based on card count and height
+        const sectionHeight = height * totalCards;
+
+        // Calculate y position based on card index
+        const y = height * cardIndex;
+
+        return {
+          ...prev,
+          [sectionId]: {
+            height: sectionHeight,
+            cards: {
+              ...section.cards,
+              [cardIndex]: { height, y },
+            },
+          },
+        };
+      });
+    },
+    []
+  );
 
   // Memoize gradient scale creation to avoid recreating it on every render
   const gradientScales = useMemo(() => {
@@ -45,11 +102,12 @@ export default function FlattenedSectionList({ sections }: Props) {
     return { rightScale, leftScale };
   }, []);
 
-  // Memoize gradient color calculation
+  // Calculate gradient colors based on card's position in section
   const getGradientColorsForCard = useCallback(
     (
-      sectionIndex: number,
       cardIndex: number,
+      sectionId: string,
+      sectionIndex: number,
       totalCards: number
     ): [string, string] => {
       const isRightAligned = sectionIndex % 2 === 0;
@@ -57,6 +115,7 @@ export default function FlattenedSectionList({ sections }: Props) {
         ? gradientScales.rightScale
         : gradientScales.leftScale;
 
+      // Calculate position based on card index (more stable for recycling)
       const startRatio = cardIndex / totalCards;
       const endRatio = (cardIndex + 1) / totalCards;
 
@@ -98,12 +157,27 @@ export default function FlattenedSectionList({ sections }: Props) {
     [sectionsLength]
   );
 
+  // Get padding for the card (adds padding based on card position in section)
+  const getCardPadding = useCallback(
+    (cardIndex: number, totalCards: number): ViewStyle => ({
+      paddingTop: cardIndex === 0 ? 50 : 10,
+      paddingBottom: cardIndex === totalCards - 1 ? 50 : 10,
+    }),
+    []
+  );
+
+  // Get a unique key for each card to help with recycling
+  const getCardKey = useCallback((item: FlatCard) => {
+    return `${item.sectionId}-${item.cardIndex}`;
+  }, []);
+
   // Memoize the renderItem function to prevent recreation on each render
   const renderItem = useCallback(
     ({ item }: { item: FlatCard }) => {
       const colors = getGradientColorsForCard(
-        item.sectionIndex,
         item.cardIndex,
+        item.sectionId,
+        item.sectionIndex,
         item.totalCards
       );
 
@@ -113,33 +187,42 @@ export default function FlattenedSectionList({ sections }: Props) {
         item.sectionIndex
       );
 
+      const cardPadding = getCardPadding(item.cardIndex, item.totalCards);
+
       const isRightAligned = item.sectionIndex % 2 === 0;
       const backgroundColor = isRightAligned ? "#2196F3" : "#FFFFFF";
 
       return (
-        <View style={styles.wrapper}>
+        <View
+          style={styles.wrapper}
+          onLayout={(e) =>
+            onCardLayout(e, item.cardIndex, item.sectionId, item.totalCards)
+          }
+        >
           <View style={styles.topHalf} />
           <View style={[styles.bottomHalf, { backgroundColor }]} />
           <LinearGradient
             colors={colors}
             start={{ x: 0, y: 0 }}
             end={{ x: 0, y: 1 }}
-            style={[styles.cardGradient, borderRadius]}
+            style={[styles.cardGradient, borderRadius, cardPadding]}
           >
             {renderCard(item.card)}
           </LinearGradient>
         </View>
       );
     },
-    [getGradientColorsForCard, getBorderRadius]
+    [getGradientColorsForCard, getBorderRadius, onCardLayout]
   );
 
   return (
     <FlashList
       data={flatData}
-      estimatedItemSize={350}
-      keyExtractor={(item) => item.card.id}
       renderItem={renderItem}
+      keyExtractor={getCardKey}
+      estimatedItemSize={100}
+      removeClippedSubviews={false} // Helps with gradient stability
+      disableAutoLayout // Disable auto-layout to prevent layout recalculations
       contentContainerStyle={{ paddingVertical: 12 }}
     />
   );
@@ -148,21 +231,26 @@ export default function FlattenedSectionList({ sections }: Props) {
 const styles = StyleSheet.create({
   wrapper: {
     position: "relative",
-    minHeight: 150,
+    minHeight: 100,
   },
   topHalf: {
-    height: "50%",
-    backgroundColor: "#BBDEFB",
-  },
-  bottomHalf: {
-    height: "50%",
-  },
-  cardGradient: {
     position: "absolute",
     top: 0,
     left: 0,
     right: 0,
+    bottom: "50%",
+    backgroundColor: "#BBDEFB",
+  },
+  bottomHalf: {
+    position: "absolute",
+    top: "50%",
+    left: 0,
+    right: 0,
     bottom: 0,
-    padding: 12,
+  },
+  cardGradient: {
+    position: "relative",
+    paddingHorizontal: 24,
+    overflow: "hidden",
   },
 });
