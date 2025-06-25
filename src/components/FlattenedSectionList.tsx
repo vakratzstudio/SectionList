@@ -96,7 +96,7 @@ export default function FlattenedSectionList({ sections }: Props) {
     return { rightScale, leftScale };
   }, []);
 
-  // Calculate gradient colors based on card's position in section
+  // Calculate gradient colors based on card's position in section with slight overlap
   const getGradientColorsForCard = useCallback(
     (
       cardIndex: number,
@@ -109,9 +109,10 @@ export default function FlattenedSectionList({ sections }: Props) {
         ? gradientScales.rightScale
         : gradientScales.leftScale;
 
-      // Calculate position based on card index (more stable for recycling)
-      const startRatio = cardIndex / totalCards;
-      const endRatio = (cardIndex + 1) / totalCards;
+      // Calculate position with slight overlap to prevent gaps
+      const overlap = 0.001; // Small overlap to prevent gaps
+      const startRatio = Math.max(0, (cardIndex - overlap) / totalCards);
+      const endRatio = Math.min(1, (cardIndex + 1 + overlap) / totalCards);
 
       return [scale(startRatio).hex(), scale(endRatio).hex()];
     },
@@ -246,5 +247,8 @@ const styles = StyleSheet.create({
     position: "relative",
     paddingHorizontal: 24,
     overflow: "hidden",
+    flex: 1,
+    // Add a tiny overlap to prevent sub-pixel gaps
+    marginVertical: -0.5,
   },
 });
