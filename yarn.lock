@@ -1806,6 +1806,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@shopify/flash-list@npm:1.7.6":
+  version: 1.7.6
+  resolution: "@shopify/flash-list@npm:1.7.6"
+  dependencies:
+    recyclerlistview: 4.2.3
+    tslib: 2.8.1
+  peerDependencies:
+    "@babel/runtime": "*"
+    react: "*"
+    react-native: "*"
+  checksum: 160ec8025549d4d9bf42ae00cd9175cd59d82630fb56bc77fd617c5af8da47d0ccff81a91811eeeaecd41b49eb1387ed8480b2c825bed1313ea98657c771a7a7
+  languageName: node
+  linkType: hard
+
 "@sinclair/typebox@npm:^0.27.8":
   version: 0.27.8
   resolution: "@sinclair/typebox@npm:0.27.8"
@@ -1869,6 +1883,13 @@ __metadata:
   dependencies:
     "@babel/types": ^7.20.7
   checksum: 2a2e5ad29c34a8b776162b0fe81c9ccb6459b2b46bf230f756ba0276a0258fcae1cbcfdccbb93a1e8b1df44f4939784ee8a1a269f95afe0c78b24b9cb6d50dd1
+  languageName: node
+  linkType: hard
+
+"@types/chroma-js@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "@types/chroma-js@npm:3.1.1"
+  checksum: be0ce5c04eeb32cdf4f747b6540924f8d9e401cca44dac641a6f03a8d7c7a19af4e0f020e8c6f4109c358e3a471c647aa7acad18e1c52cca20c0afa088c08bf4
   languageName: node
   linkType: hard
 
@@ -2538,6 +2559,13 @@ __metadata:
   version: 3.0.0
   resolution: "chownr@npm:3.0.0"
   checksum: fd73a4bab48b79e66903fe1cafbdc208956f41ea4f856df883d0c7277b7ab29fd33ee65f93b2ec9192fc0169238f2f8307b7735d27c155821d886b84aa97aa8d
+  languageName: node
+  linkType: hard
+
+"chroma-js@npm:^3.1.2":
+  version: 3.1.2
+  resolution: "chroma-js@npm:3.1.2"
+  checksum: a626eef9b2636c6ece44eb9c6a3410bdaac065fc0ac3501a96453801a34a589ae1c567f3624bf1001e60d6b13a4b521b62f7780ada361cedb92c5804c2346f02
   languageName: node
   linkType: hard
 
@@ -4103,7 +4131,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash.debounce@npm:^4.0.8":
+"lodash.debounce@npm:4.0.8, lodash.debounce@npm:^4.0.8":
   version: 4.0.8
   resolution: "lodash.debounce@npm:4.0.8"
   checksum: a3f527d22c548f43ae31c861ada88b2637eb48ac6aa3eb56e82d44917971b8aa96fbb37aa60efea674dc4ee8c42074f90f7b1f772e9db375435f6c83a19b3bc6
@@ -4126,7 +4154,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"loose-envify@npm:^1.0.0":
+"loose-envify@npm:^1.0.0, loose-envify@npm:^1.4.0":
   version: 1.4.0
   resolution: "loose-envify@npm:1.4.0"
   dependencies:
@@ -4744,7 +4772,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"object-assign@npm:^4.0.1":
+"object-assign@npm:^4.0.1, object-assign@npm:^4.1.1":
   version: 4.1.1
   resolution: "object-assign@npm:4.1.1"
   checksum: fcc6e4ea8c7fe48abfbb552578b1c53e0d194086e2e6bbbf59e0a536381a292f39943c6e9628af05b5528aa5e3318bb30d6b2e53cadaf5b8fe9e12c4b69af23f
@@ -5082,6 +5110,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"prop-types@npm:15.8.1":
+  version: 15.8.1
+  resolution: "prop-types@npm:15.8.1"
+  dependencies:
+    loose-envify: ^1.4.0
+    object-assign: ^4.1.1
+    react-is: ^16.13.1
+  checksum: c056d3f1c057cb7ff8344c645450e14f088a915d078dcda795041765047fa080d38e5d626560ccaac94a4e16e3aa15f3557c1a9a8d1174530955e992c675e459
+  languageName: node
+  linkType: hard
+
 "punycode@npm:^2.1.1":
   version: 2.3.1
   resolution: "punycode@npm:2.3.1"
@@ -5135,6 +5174,13 @@ __metadata:
     shell-quote: ^1.6.1
     ws: ^7
   checksum: aa72d4ad993af861088ead93bcce789dbf084a530a7723d94d3a040dad6cdb3fa46e14ff0d6e1c1c8f22713f30cf52505c6083f3c91b5114c1d90f7a3c2c1e43
+  languageName: node
+  linkType: hard
+
+"react-is@npm:^16.13.1":
+  version: 16.13.1
+  resolution: "react-is@npm:16.13.1"
+  checksum: f7a19ac3496de32ca9ae12aa030f00f14a3d45374f1ceca0af707c831b2a6098ef0d6bdae51bd437b0a306d7f01d4677fcc8de7c0d331eb47ad0f46130e53c5f
   languageName: node
   linkType: hard
 
@@ -5228,6 +5274,20 @@ __metadata:
   version: 19.0.0
   resolution: "react@npm:19.0.0"
   checksum: 86de15d85b2465feb40297a90319c325cb07cf27191a361d47bcfe8c6126c973d660125aa67b8f4cbbe39f15a2f32efd0c814e98196d8e5b68c567ba40a399c6
+  languageName: node
+  linkType: hard
+
+"recyclerlistview@npm:4.2.3":
+  version: 4.2.3
+  resolution: "recyclerlistview@npm:4.2.3"
+  dependencies:
+    lodash.debounce: 4.0.8
+    prop-types: 15.8.1
+    ts-object-utils: 0.0.5
+  peerDependencies:
+    react: ">= 15.2.1"
+    react-native: ">= 0.30.0"
+  checksum: 847c00bdc7e22178cc20b58b8da215fb2f3f69a4edffd41db97038d0f9eb1475340793e11025f6cc160d3452967ab5724db3896920ba77d2da5208276328254f
   languageName: node
   linkType: hard
 
@@ -5405,7 +5465,10 @@ __metadata:
   resolution: "ribbonlist@workspace:."
   dependencies:
     "@babel/core": ^7.25.2
+    "@shopify/flash-list": 1.7.6
+    "@types/chroma-js": ^3.1.1
     "@types/react": ~19.0.10
+    chroma-js: ^3.1.2
     expo: ~53.0.12
     expo-linear-gradient: ~14.1.5
     expo-status-bar: ~2.2.3
@@ -5980,6 +6043,20 @@ __metadata:
   version: 0.1.13
   resolution: "ts-interface-checker@npm:0.1.13"
   checksum: 20c29189c2dd6067a8775e07823ddf8d59a33e2ffc47a1bd59a5cb28bb0121a2969a816d5e77eda2ed85b18171aa5d1c4005a6b88ae8499ec7cc49f78571cb5e
+  languageName: node
+  linkType: hard
+
+"ts-object-utils@npm:0.0.5":
+  version: 0.0.5
+  resolution: "ts-object-utils@npm:0.0.5"
+  checksum: 83c48fbdaba392fb2c01cea53b267ed5538d2bb44fc6c3eecc10bcfabc1780bfa6ec8569b52bbf0140d9b521d9049d5f15884e12286918244d463d854dbc73cb
+  languageName: node
+  linkType: hard
+
+"tslib@npm:2.8.1":
+  version: 2.8.1
+  resolution: "tslib@npm:2.8.1"
+  checksum: e4aba30e632b8c8902b47587fd13345e2827fa639e7c3121074d5ee0880723282411a8838f830b55100cbe4517672f84a2472667d355b81e8af165a55dc6203a
   languageName: node
   linkType: hard
 

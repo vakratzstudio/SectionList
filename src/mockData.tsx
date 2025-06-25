@@ -43,12 +43,12 @@ export const mockData: SectionItem[] = [
   {
     id: "section-4",
     title: "Fourth Section",
-    data: generateCards(1, 2),
+    data: generateCards(1, 3),
   },
   {
     id: "section-5",
-    title: "Third Section",
-    data: generateCards(7, 2),
+    title: "Fifth Section",
+    data: generateCards(7, 4),
   },
 ];
 
