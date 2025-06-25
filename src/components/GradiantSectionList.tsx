@@ -58,6 +58,7 @@ export default function GradientSectionList({ sections }: Props) {
 
     return [scale(startRatio).hex(), scale(endRatio).hex()];
   };
+
   const getBorderRadius = (
     cardIndexInSection: number,
     totalCardsInSection: number,
@@ -115,24 +116,24 @@ export default function GradientSectionList({ sections }: Props) {
       item.sectionIndex
     );
 
-    // Calculate alignment for backgroundColor on wrapper
     const alignment =
       item.sectionIndex % 2 === 0 ? Alignment.RIGHT : Alignment.LEFT;
 
-    // Determine wrapper background color
-    let wrapperBackgroundColor: string | undefined = undefined;
-
-    if (item.cardIndex === 0) {
-      // First card in section
-      wrapperBackgroundColor = "#BBDEFB";
-    } else if (item.cardIndex === item.totalCards - 1) {
-      // Last card in section
-      wrapperBackgroundColor =
-        alignment === Alignment.RIGHT ? "#2196F3" : "#FFFFFF";
-    }
-
     return (
-      <View style={{ backgroundColor: wrapperBackgroundColor }}>
+      <View style={styles.wrapper}>
+        {/* Top half background */}
+        <View style={styles.topHalf} />
+        {/* Bottom half background */}
+        <View
+          style={[
+            styles.bottomHalf,
+            {
+              backgroundColor:
+                alignment === Alignment.RIGHT ? "#2196F3" : "#FFFFFF",
+            },
+          ]}
+        />
+        {/* Card on top */}
         <LinearGradient
           colors={colors}
           start={{ x: 0, y: 0 }}
@@ -157,7 +158,23 @@ export default function GradientSectionList({ sections }: Props) {
 }
 
 const styles = StyleSheet.create({
+  wrapper: {
+    position: "relative",
+    minHeight: 150,
+  },
+  topHalf: {
+    height: "50%",
+    backgroundColor: "#BBDEFB",
+  },
+  bottomHalf: {
+    height: "50%",
+  },
   cardGradient: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     padding: 12,
   },
 });
