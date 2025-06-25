@@ -100,7 +100,6 @@ export default function FlattenedSectionList({ sections }: Props) {
   const getGradientColorsForCard = useCallback(
     (
       cardIndex: number,
-      sectionId: string,
       sectionIndex: number,
       totalCards: number
     ): [string, string] => {
@@ -110,7 +109,7 @@ export default function FlattenedSectionList({ sections }: Props) {
         : gradientScales.leftScale;
 
       // Calculate position with slight overlap to prevent gaps
-      const overlap = 0.001; // Small overlap to prevent gaps
+      const overlap = 0.001;
       const startRatio = Math.max(0, (cardIndex - overlap) / totalCards);
       const endRatio = Math.min(1, (cardIndex + 1 + overlap) / totalCards);
 
@@ -119,17 +118,18 @@ export default function FlattenedSectionList({ sections }: Props) {
     [gradientScales]
   );
 
-  // Memoize border radius calculation
+  // Calculate border radius based on card position
   const getBorderRadius = useCallback(
     (
-      cardIndexInSection: number,
-      totalCardsInSection: number,
-      sectionIndex: number
+      cardIndex: number,
+      totalCards: number,
+      sectionIndex: number,
+      sectionsCount: number
     ): ViewStyle => {
-      const isFirstCard = cardIndexInSection === 0;
-      const isLastCard = cardIndexInSection === totalCardsInSection - 1;
+      const isFirstCard = cardIndex === 0;
+      const isLastCard = cardIndex === totalCards - 1;
       const isFirstSection = sectionIndex === 0;
-      const isLastSection = sectionIndex === sectionsLength - 1;
+      const isLastSection = sectionIndex === sectionsCount - 1;
       const isRightAligned = sectionIndex % 2 === 0;
 
       const getRadius = (isEdge: boolean, isRight: boolean) => {
@@ -149,29 +149,14 @@ export default function FlattenedSectionList({ sections }: Props) {
         overflow: "hidden",
       };
     },
-    [sectionsLength]
-  );
-
-  // Get padding for the card (adds padding based on card position in section)
-  const getCardPadding = useCallback(
-    (cardIndex: number, totalCards: number): ViewStyle => ({
-      paddingTop: cardIndex === 0 ? 50 : 10,
-      paddingBottom: cardIndex === totalCards - 1 ? 50 : 10,
-    }),
     []
   );
 
-  // Get a unique key for each card to help with recycling
-  const getCardKey = useCallback((item: FlatCard) => {
-    return `${item.sectionId}-${item.cardIndex}`;
-  }, []);
-
-  // Memoize the renderItem function to prevent recreation on each render
+  // Render function for individual card items
   const renderItem = useCallback(
     ({ item }: { item: FlatCard }) => {
       const colors = getGradientColorsForCard(
         item.cardIndex,
-        item.sectionId,
         item.sectionIndex,
         item.totalCards
       );
@@ -179,13 +164,16 @@ export default function FlattenedSectionList({ sections }: Props) {
       const borderRadius = getBorderRadius(
         item.cardIndex,
         item.totalCards,
-        item.sectionIndex
+        item.sectionIndex,
+        sections.length
       );
-
-      const cardPadding = getCardPadding(item.cardIndex, item.totalCards);
 
       const isRightAligned = item.sectionIndex % 2 === 0;
       const backgroundColor = isRightAligned ? "#2196F3" : "#FFFFFF";
+      const cardPadding = {
+        paddingTop: item.cardIndex === 0 ? 50 : 10,
+        paddingBottom: item.cardIndex === item.totalCards - 1 ? 50 : 10,
+      };
 
       return (
         <View
@@ -207,7 +195,13 @@ export default function FlattenedSectionList({ sections }: Props) {
         </View>
       );
     },
-    [getGradientColorsForCard, getBorderRadius, onCardLayout]
+    [getGradientColorsForCard, getBorderRadius, onCardLayout, sections.length]
+  );
+
+  // Get a unique key for each card to help with recycling
+  const getCardKey = useCallback(
+    (item: FlatCard) => `${item.sectionId}-${item.cardIndex}`,
+    []
   );
 
   return (
@@ -216,8 +210,8 @@ export default function FlattenedSectionList({ sections }: Props) {
       renderItem={renderItem}
       keyExtractor={getCardKey}
       estimatedItemSize={100}
-      removeClippedSubviews={false} // Helps with gradient stability
-      disableAutoLayout // Disable auto-layout to prevent layout recalculations
+      removeClippedSubviews={false}
+      disableAutoLayout
       contentContainerStyle={{ paddingVertical: 12 }}
     />
   );
