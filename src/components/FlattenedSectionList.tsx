@@ -1,11 +1,5 @@
-import React, { useMemo, useCallback, useState, useRef } from "react";
-import {
-  View,
-  StyleSheet,
-  ViewStyle,
-  Text,
-  LayoutChangeEvent,
-} from "react-native";
+import React, { useMemo, useCallback, useState } from "react";
+import { View, StyleSheet, ViewStyle, LayoutChangeEvent } from "react-native";
 import { FlashList } from "@shopify/flash-list";
 import { LinearGradient } from "expo-linear-gradient";
 import chroma from "chroma-js";
