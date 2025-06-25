@@ -64,41 +64,22 @@ export default function GradientSectionList({ sections }: Props) {
     totalCardsInSection: number,
     sectionIndex: number
   ): ViewStyle => {
-    const isFirstCardInSection = cardIndexInSection === 0;
-    const isLastCardInSection = cardIndexInSection === totalCardsInSection - 1;
+    const isFirstCard = cardIndexInSection === 0;
+    const isLastCard = cardIndexInSection === totalCardsInSection - 1;
     const isFirstSection = sectionIndex === 0;
     const isLastSection = sectionIndex === sections.length - 1;
-    const alignment = sectionIndex % 2 === 0 ? Alignment.RIGHT : Alignment.LEFT;
+    const isRightAligned = sectionIndex % 2 === 0;
+    
+    const getRadius = (isEdge: boolean, isRight: boolean) => {
+      if (isEdge) return isRight ? 32 : 0;
+      return isRight ? 0 : 32;
+    };
 
     return {
-      borderTopLeftRadius: isFirstSection
-        ? 0
-        : isFirstCardInSection
-        ? alignment === Alignment.RIGHT
-          ? 32
-          : 0
-        : 0,
-      borderTopRightRadius: isFirstSection
-        ? 0
-        : isFirstCardInSection
-        ? alignment === Alignment.RIGHT
-          ? 0
-          : 32
-        : 0,
-      borderBottomLeftRadius: isLastSection
-        ? 0
-        : isLastCardInSection
-        ? alignment === Alignment.RIGHT
-          ? 32
-          : 0
-        : 0,
-      borderBottomRightRadius: isLastSection
-        ? 0
-        : isLastCardInSection
-        ? alignment === Alignment.RIGHT
-          ? 0
-          : 32
-        : 0,
+      borderTopLeftRadius: !isFirstSection && isFirstCard ? getRadius(true, isRightAligned) : 0,
+      borderTopRightRadius: !isFirstSection && isFirstCard ? getRadius(false, isRightAligned) : 0,
+      borderBottomLeftRadius: !isLastSection && isLastCard ? getRadius(true, isRightAligned) : 0,
+      borderBottomRightRadius: !isLastSection && isLastCard ? getRadius(false, isRightAligned) : 0,
       overflow: "hidden",
     };
   };
