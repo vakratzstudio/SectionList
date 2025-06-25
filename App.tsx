@@ -15,6 +15,7 @@ import {
 } from "./src/mockData";
 import FlattenedSectionList from "./src/components/FlattenedSectionList";
 import { useState } from "react";
+import SectionList from "./src/components/SectionList";
 
 // Simple ID generator for React Native
 const generateId = () => {
@@ -25,16 +26,9 @@ const generateId = () => {
   });
 };
 
-// Generate a random height between min and max (inclusive)
-const getRandomHeight = (min: number, max: number) => {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-};
-
 export default function App() {
   const [mockData, setMockData] = useState<SectionItem[]>(initialMockData);
   const [selectedSection, setSelectedSection] = useState(mockData[0]?.id || "");
-  // Remove unused inputValue state since we're not using it
-  // const [inputValue, setInputValue] = useState('');
 
   // Generate a random card
   const generateRandomCard = (): CardItem => {
@@ -100,7 +94,7 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <StatusBar/>
+      <StatusBar />
       <View style={styles.controlsContainer}>
         <Text style={styles.label}>Select Section:</Text>
         <ScrollView
@@ -134,6 +128,7 @@ export default function App() {
 
       <View style={styles.listContainer}>
         <FlattenedSectionList sections={mockData} />
+        {/* <SectionList sections={mockData} /> */}
       </View>
     </View>
   );
