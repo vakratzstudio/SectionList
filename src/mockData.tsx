@@ -1,17 +1,6 @@
 import React from "react";
 import { Text, View, StyleSheet } from "react-native";
-
-export interface CardItem {
-  id: string;
-  title: string;
-  content: string;
-}
-
-export interface SectionItem {
-  id: string;
-  title: string;
-  data: CardItem[];
-}
+import { CardItem, SectionItem } from "./types";
 
 const generateCards = (count: number, sectionIndex: number): CardItem[] => {
   return Array.from({ length: count }, (_, i) => {

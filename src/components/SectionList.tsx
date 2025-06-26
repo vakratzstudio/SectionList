@@ -1,8 +1,9 @@
 import React from "react";
 import { View } from "react-native";
 import { FlashList } from "@shopify/flash-list";
-import { SectionItem, renderCard } from "../mockData";
-import { Alignment, Section } from "./Section";
+import { renderCard } from "../mockData";
+import { Section } from "./Section";
+import { Alignment, SectionItem } from "../types";
 
 type Props = {
   sections: SectionItem[];

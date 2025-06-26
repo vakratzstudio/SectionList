@@ -1,11 +1,7 @@
 import React, { ReactNode } from "react";
 import { View, StyleSheet, StyleProp, ViewStyle, Text } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-
-export enum Alignment {
-  LEFT,
-  RIGHT,
-}
+import { Alignment } from "../types";
 
 interface SectionProps {
   children: ReactNode;

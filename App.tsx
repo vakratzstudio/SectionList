@@ -6,16 +6,12 @@ import {
   Button,
   StatusBar,
 } from "react-native";
-import { Section, Alignment } from "./src/components/Section";
-import {
-  mockData as initialMockData,
-  renderCard,
-  CardItem,
-  SectionItem,
-} from "./src/mockData";
+import { Section } from "./src/components/Section";
+import { mockData as initialMockData, renderCard } from "./src/mockData";
 import FlattenedSectionList from "./src/components/FlattenedSectionList";
 import { useState } from "react";
 import SectionList from "./src/components/SectionList";
+import { SectionItem, CardItem, Alignment } from "./src/types";
 
 // Simple ID generator for React Native
 const generateId = () => {
@@ -127,8 +123,8 @@ export default function App() {
       </View>
 
       <View style={styles.listContainer}>
-        <FlattenedSectionList sections={mockData} />
-        {/* <SectionList sections={mockData} /> */}
+        {/* <FlattenedSectionList sections={mockData} /> */}
+        <SectionList sections={mockData} />
       </View>
     </View>
   );
