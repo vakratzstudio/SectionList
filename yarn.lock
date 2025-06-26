@@ -1927,6 +1927,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lodash@npm:^4.17.19":
+  version: 4.17.19
+  resolution: "@types/lodash@npm:4.17.19"
+  checksum: a75452bd0ed21c9dba98c0d395ef0f9de3220a8410dc07dfb041f84c7f1733b88648f1ba8e62b14f70ff9e935797b618f7060fba40abdf754cdbfb27a99ec27e
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:*":
   version: 24.0.4
   resolution: "@types/node@npm:24.0.4"
@@ -4145,6 +4152,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lodash@npm:^4.17.21":
+  version: 4.17.21
+  resolution: "lodash@npm:4.17.21"
+  checksum: eb835a2e51d381e561e508ce932ea50a8e5a68f4ebdd771ea240d3048244a8d13658acbd502cd4829768c56f2e16bdd4340b9ea141297d472517b83868e677f7
+  languageName: node
+  linkType: hard
+
 "log-symbols@npm:^2.2.0":
   version: 2.2.0
   resolution: "log-symbols@npm:2.2.0"
@@ -5467,11 +5481,13 @@ __metadata:
     "@babel/core": ^7.25.2
     "@shopify/flash-list": 1.7.6
     "@types/chroma-js": ^3.1.1
+    "@types/lodash": ^4.17.19
     "@types/react": ~19.0.10
     chroma-js: ^3.1.2
     expo: ~53.0.12
     expo-linear-gradient: ~14.1.5
     expo-status-bar: ~2.2.3
+    lodash: ^4.17.21
     react: 19.0.0
     react-native: 0.79.4
     typescript: ~5.8.3

@@ -1,6 +1,7 @@
 import React, { useMemo, useCallback, useState } from "react";
 import { FlashList } from "@shopify/flash-list";
 import chroma from "chroma-js";
+import { isEqual } from "lodash";
 import { LayoutChangeEvent, ViewStyle } from "react-native";
 import MemoizedCard from "./MemoizedCard";
 import { FlatCard, SectionLayout, SectionItem } from "../types";
@@ -15,6 +16,7 @@ export default function FlattenedSectionList({ sections }: Props) {
   const [sectionLayouts, setSectionLayouts] = useState<
     Record<string, SectionLayout>
   >({});
+  const [layoutVersion, setLayoutVersion] = useState(0);
 
   const flatData: FlatCard[] = useMemo(() => {
     const result: FlatCard[] = [];
@@ -37,25 +39,38 @@ export default function FlattenedSectionList({ sections }: Props) {
   const onCardLayout = useCallback(
     (event: LayoutChangeEvent, item: FlatCard) => {
       const { height } = event.nativeEvent.layout;
-      const { sectionId, cardIndex, totalCards } = item;
+      const { sectionId, cardIndex } = item;
 
       setSectionLayouts((prev) => {
-        const section = prev[sectionId] || { height: 0, cards: {} };
-        if (section.cards[cardIndex]?.height === height) return prev;
-
-        const sectionHeight = height * totalCards;
-        const y = height * cardIndex;
-
-        return {
-          ...prev,
-          [sectionId]: {
-            height: sectionHeight,
-            cards: {
-              ...section.cards,
-              [cardIndex]: { height, y },
-            },
-          },
+        const prevSection = prev[sectionId] || { height: 0, cards: {} };
+        const prevCards = {
+          ...prevSection.cards,
+          [cardIndex]: { height, y: 0 },
         };
+
+        let y = 0;
+        const sorted = Object.entries(prevCards)
+          .map(([k, v]) => ({ index: Number(k), ...v }))
+          .sort((a, b) => a.index - b.index);
+
+        const updatedCards: SectionLayout["cards"] = {};
+        sorted.forEach(({ index, height }) => {
+          updatedCards[index] = { height, y };
+          y += height;
+        });
+
+        const newLayout = {
+          height: y,
+          cards: updatedCards,
+        };
+
+        const changed = !isEqual(prev[sectionId], newLayout);
+        if (changed) {
+          setLayoutVersion((v) => v + 1);
+          return { ...prev, [sectionId]: newLayout };
+        }
+
+        return prev;
       });
     },
     []
@@ -68,23 +83,24 @@ export default function FlattenedSectionList({ sections }: Props) {
   }, []);
 
   const getGradientColorsForCard = useCallback(
-    (
-      cardIndex: number,
-      sectionIndex: number,
-      totalCards: number
-    ): [string, string] => {
-      const isRightAligned = sectionIndex % 2 === 0;
-      const scale = isRightAligned
-        ? gradientScales.rightScale
-        : gradientScales.leftScale;
+    (item: FlatCard): [string, string] => {
+      const { sectionId, cardIndex, sectionIndex } = item;
+      const layout = sectionLayouts[sectionId];
+      const scale =
+        sectionIndex % 2 === 0
+          ? gradientScales.rightScale
+          : gradientScales.leftScale;
 
-      const overlap = 0.001;
-      const startRatio = Math.max(0, (cardIndex - overlap) / totalCards);
-      const endRatio = Math.min(1, (cardIndex + 1 + overlap) / totalCards);
+      if (!layout) return [scale(0).hex(), scale(1).hex()];
+      const card = layout.cards[cardIndex];
+      if (!card) return [scale(0).hex(), scale(1).hex()];
+
+      const startRatio = card.y / layout.height;
+      const endRatio = (card.y + card.height) / layout.height;
 
       return [scale(startRatio).hex(), scale(endRatio).hex()];
     },
-    [gradientScales]
+    [gradientScales, sectionLayouts]
   );
 
   const getBorderRadius = useCallback(
@@ -126,17 +142,18 @@ export default function FlattenedSectionList({ sections }: Props) {
   return (
     <FlashList
       data={flatData}
+      extraData={layoutVersion}
       renderItem={({ item }) => (
         <MemoizedCard
           item={item}
           onLayout={onCardLayout}
-          getGradientColorsForCard={getGradientColorsForCard}
+          getGradientColorsForCard={() => getGradientColorsForCard(item)}
           getBorderRadius={getBorderRadius}
           sectionsCount={sectionsLength}
         />
       )}
       keyExtractor={getCardKey}
-      estimatedItemSize={100}
+      estimatedItemSize={200}
       removeClippedSubviews={false}
       disableAutoLayout
       contentContainerStyle={{ paddingVertical: 12 }}

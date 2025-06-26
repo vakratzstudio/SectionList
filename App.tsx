@@ -88,8 +88,8 @@ export default function App() {
       </View>
 
       <View style={styles.listContainer}>
-        {/* <FlattenedSectionList sections={mockData} /> */}
-        <SectionList sections={mockData} />
+        <FlattenedSectionList sections={mockData} />
+        {/* <SectionList sections={mockData} /> */}
       </View>
     </View>
   );
