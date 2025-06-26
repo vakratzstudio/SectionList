@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { View, StyleSheet, StyleProp, ViewStyle, Text } from "react-native";
+import { View, StyleSheet, StyleProp, ViewStyle } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Alignment } from "../types";
 
@@ -11,7 +11,7 @@ interface SectionProps {
   style?: StyleProp<ViewStyle>;
 }
 
-export const Section: React.FC<SectionProps> = ({
+const SectionComponent: React.FC<SectionProps> = ({
   children,
   isFirstInList = false,
   isLastInList = false,
@@ -77,20 +77,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  card: {
-    backgroundColor: "white",
-    borderRadius: 12,
-    padding: 24,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 4,
-  },
-  cardText: {
-    fontSize: 16,
-    color: "#333",
-  },
   firstInList: {
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
@@ -102,3 +88,6 @@ const styles = StyleSheet.create({
   right: { borderBottomLeftRadius: 34, borderTopLeftRadius: 34 },
   left: { borderBottomRightRadius: 34, borderTopRightRadius: 34 },
 });
+
+// Wrap the component in React.memo for performance optimization
+export const Section = React.memo(SectionComponent);

@@ -6,7 +6,6 @@ import {
   Button,
   StatusBar,
 } from "react-native";
-import { Section } from "./src/components/Section";
 import { mockData as initialMockData, renderCard } from "./src/mockData";
 import FlattenedSectionList from "./src/components/FlattenedSectionList";
 import { useState } from "react";
@@ -51,40 +50,6 @@ export default function App() {
           ? { ...section, data: [...section.data, newCard] }
           : section
       )
-    );
-  };
-
-  // Render each section with its cards
-  const renderSection = ({
-    section,
-    isFirst,
-    isLast,
-  }: {
-    section: { data: CardItem[]; id: string; title: string };
-    isFirst: boolean;
-    isLast: boolean;
-  }) => {
-    const alignment =
-      parseInt(section.id.split("-")[1]) % 2 === 0
-        ? Alignment.LEFT
-        : Alignment.RIGHT;
-
-    return (
-      <Section
-        key={section.id}
-        isFirstInList={isFirst}
-        isLastInList={isLast}
-        alignment={alignment}
-      >
-        {section.data.map((item, index) => (
-          <View
-            key={item.id}
-            style={{ marginBottom: index < section.data.length - 1 ? 16 : 0 }}
-          >
-            {renderCard(item)}
-          </View>
-        ))}
-      </Section>
     );
   };
 
