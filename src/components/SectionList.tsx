@@ -1,15 +1,17 @@
 import React from "react";
-import { View } from "react-native";
+import { View, Dimensions } from "react-native";
 import { FlashList } from "@shopify/flash-list";
 import { renderCard } from "../mockData";
+import ShimmerCard from "./ShimmerCard";
 import { Section } from "./Section";
 import { Alignment, SectionItem } from "../types";
 
 type Props = {
   sections: SectionItem[];
+  onLoadMore?: () => void;
 };
 
-export default function SectionList({ sections }: Props) {
+export default function SectionList({ sections, onLoadMore }: Props) {
   const renderSection = React.useCallback(
     (section: SectionItem, index: number) => {
       const alignment = index % 2 === 0 ? Alignment.RIGHT : Alignment.LEFT;
@@ -30,7 +32,11 @@ export default function SectionList({ sections }: Props) {
                 marginBottom: itemIndex < section.data.length - 1 ? 16 : 0,
               }}
             >
-              {renderCard(item)}
+              {item.isPlaceholder ? (
+                <ShimmerCard />
+              ) : (
+                renderCard(item)
+              )}
             </View>
           ))}
         </Section>
@@ -46,6 +52,7 @@ export default function SectionList({ sections }: Props) {
         keyExtractor={(item) => item.id}
         renderItem={({ item, index }) => renderSection(item, index)}
         estimatedItemSize={200}
+        onEndReached={onLoadMore}
       />
     </View>
   );

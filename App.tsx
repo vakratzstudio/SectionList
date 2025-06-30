@@ -1,3 +1,4 @@
+import React from "react";
 import {
   StyleSheet,
   View,
@@ -6,7 +7,7 @@ import {
   Button,
   StatusBar,
 } from "react-native";
-import { mockData as initialMockData, renderCard } from "./src/mockData";
+import { renderCard, getSectionIds, getSectionById } from "./src/mockData";
 import FlattenedSectionList from "./src/components/FlattenedSectionList";
 import { useState } from "react";
 import SectionList from "./src/components/SectionList";
@@ -22,8 +23,43 @@ const generateId = () => {
 };
 
 export default function App() {
-  const [mockData, setMockData] = useState<SectionItem[]>(initialMockData);
-  const [selectedSection, setSelectedSection] = useState(mockData[0]?.id || "");
+  const [mockData, setMockData] = useState<SectionItem[]>([]);
+  const [selectedSection, setSelectedSection] = useState("");
+  const [allSectionIds, setAllSectionIds] = useState<string[]>([]);
+  const [loadingMore, setLoadingMore] = useState(false);
+
+  // Fetch section IDs and first 4 sections on mount
+  React.useEffect(() => {
+    let isMounted = true;
+    getSectionIds().then(ids => {
+      setAllSectionIds(ids);
+      const firstFour = ids.slice(0, 4);
+      return Promise.all(firstFour.map(getSectionById));
+    }).then(sections => {
+      const validSections = sections.filter(Boolean) as SectionItem[];
+      if (isMounted) {
+        setMockData(validSections);
+        if (validSections.length > 0) {
+          setSelectedSection(validSections[0].id);
+        }
+      }
+    });
+    return () => { isMounted = false; };
+  }, []);
+
+  // Handler to load next 4 sections
+  const handleLoadMoreSections = React.useCallback(() => {
+    if (loadingMore || allSectionIds.length === 0) return;
+    const loadedCount = mockData.length;
+    const nextIds = allSectionIds.slice(loadedCount, loadedCount + 4);
+    if (nextIds.length === 0) return;
+    setLoadingMore(true);
+    Promise.all(nextIds.map(getSectionById)).then(sections => {
+      const validSections = sections.filter(Boolean) as SectionItem[];
+      setMockData(prev => [...prev, ...validSections]);
+      setLoadingMore(false);
+    });
+  }, [loadingMore, allSectionIds, mockData.length]);
 
   // Generate a random card
   const generateRandomCard = (): CardItem => {
@@ -88,8 +124,26 @@ export default function App() {
       </View>
 
       <View style={styles.listContainer}>
-        <FlattenedSectionList sections={mockData} />
-        {/* <SectionList sections={mockData} /> */}
+        {/* <FlattenedSectionList sections={mockData} /> */}
+        <SectionList
+          sections={
+            mockData.length > 0
+              ? mockData
+              : Array.from({ length: 4 }).map((_, i) => ({
+                  id: `placeholder-section-${i}`,
+                  title: '',
+                  data: [
+                    {
+                      id: `placeholder-card-${i}`,
+                      title: '',
+                      content: '',
+                      isPlaceholder: true,
+                    },
+                  ],
+                }))
+          }
+          onLoadMore={handleLoadMoreSections}
+        />
       </View>
     </View>
   );

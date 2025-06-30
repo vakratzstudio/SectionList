@@ -47,7 +47,47 @@ export const mockData: SectionItem[] = [
     title: "Fifth Section",
     data: generateCards(7, 4),
   },
+  {
+    id: "section-6",
+    title: "Sixth Section",
+    data: generateCards(1, 5),
+  },
+  {
+    id: "section-7",
+    title: "Seventh Section",
+    data: generateCards(3, 6),
+  },
+  {
+    id: "section-8",
+    title: "Eighth Section",
+    data: generateCards(2, 7),
+  },
+  {
+    id: "section-9",
+    title: "Ninth Section",
+    data: generateCards(4, 8),
+  },
+  {
+    id: "section-10",
+    title: "Tenth Section",
+    data: generateCards(1, 9),
+  },
 ];
+
+// --- Mock API helpers ---
+function delay<T>(ms: number, value: T): Promise<T> {
+  return new Promise((resolve) => setTimeout(() => resolve(value), ms));
+}
+
+export function getSectionIds(): Promise<string[]> {
+  const ids = mockData.map((section) => section.id);
+  return delay(600, ids); // 600ms delay
+}
+
+export function getSectionById(id: string): Promise<SectionItem | undefined> {
+  const section = mockData.find((section) => section.id === id);
+  return delay(700, section); // 700ms delay
+}
 
 const styles = StyleSheet.create({
   card: {

@@ -21,11 +21,12 @@ export type SectionLayout = {
   cards: Record<number, CardLayout>;
 };
 
-export interface CardItem {
+export type CardItem = {
   id: string;
   title: string;
   content: string;
-}
+  isPlaceholder?: boolean;
+};
 
 export interface SectionItem {
   id: string;

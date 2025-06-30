@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
     alignItems: "center",
     justifyContent: "center",
+    width: "100%",
   },
   firstInList: {
     borderTopLeftRadius: 0,
