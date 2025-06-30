@@ -42,7 +42,7 @@ const SectionComponent: React.FC<SectionProps> = ({
               : ["#2196F3", "#BBDEFB"] // Dark blue to light blue for left alignment
           }
           style={[
-            { width: "100%", padding: 16 },
+            { width: "100%", paddingHorizontal: 24, paddingVertical: 50 },
             alignment === Alignment.LEFT ? styles.left : styles.right,
             isFirstInList ? styles.firstInList : {},
             isLastInList ? styles.lastInList : {},
@@ -63,6 +63,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
+    overflow: "hidden",
   },
   background: {
     ...StyleSheet.absoluteFillObject,

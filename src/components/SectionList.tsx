@@ -29,14 +29,10 @@ export default function SectionList({ sections, onLoadMore }: Props) {
             <View
               key={item.id}
               style={{
-                marginBottom: itemIndex < section.data.length - 1 ? 16 : 0,
+                marginVertical: 10,
               }}
             >
-              {item.isPlaceholder ? (
-                <ShimmerCard />
-              ) : (
-                renderCard(item)
-              )}
+              {item.isPlaceholder ? <ShimmerCard /> : renderCard(item)}
             </View>
           ))}
         </Section>
