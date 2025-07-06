@@ -32,14 +32,14 @@ export const ShimmerCard: React.FC = () => {
 
   return (
     <View style={[styles.container, { height }]}>
-      <Animated.View
+      {/* <Animated.View
         style={[
           styles.shimmer,
-          {
-            transform: [{ translateX: shimmerTranslate }],
-          },
+          // {
+          //   transform: [{ translateX: shimmerTranslate }],
+          // },
         ]}
-      />
+      /> */}
     </View>
   );
 };
@@ -47,7 +47,7 @@ export const ShimmerCard: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    backgroundColor: "#e0e0e0",
+    backgroundColor: "transparent",
     borderRadius: 30,
     overflow: "hidden",
   },
