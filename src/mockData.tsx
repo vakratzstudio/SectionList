@@ -95,6 +95,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 30,
     backgroundColor: "white",
+    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
   },
   cardTitle: {
     fontSize: 18,

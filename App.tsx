@@ -81,11 +81,16 @@ export default function App() {
 
     const newCard = generateRandomCard();
     setMockData((prevData: SectionItem[]) =>
-      prevData.map((section: SectionItem) =>
-        section.id === selectedSection
-          ? { ...section, data: [...section.data, newCard] }
-          : section
-      )
+      prevData.map((section: SectionItem) => {
+        if (section.id !== selectedSection) return section;
+        const insertIndex = Math.floor(Math.random() * (section.data.length + 1));
+        const newData = [
+          ...section.data.slice(0, insertIndex),
+          newCard,
+          ...section.data.slice(insertIndex)
+        ];
+        return { ...section, data: newData };
+      })
     );
   };
 
