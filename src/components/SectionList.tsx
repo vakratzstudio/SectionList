@@ -43,6 +43,8 @@ export default function SectionList({ sections, onLoadMore }: Props) {
 
   return (
     <View style={{ flex: 1 }}>
+      {/* make this sure flashlist is better prefforming then flatlist,
+      in my case on iphine 16 bpro max flatlist worked better*/}
       <FlashList
         data={sections}
         keyExtractor={(item) => item.id}
