@@ -21,13 +21,13 @@ const SectionComponent: React.FC<SectionProps> = ({
     <View style={styles.container}>
       {/* Split Background */}
       <View style={styles.background}>
-        <View style={[styles.half, { backgroundColor: "#BBDEFB" }]} />
+        <View style={[styles.half, { backgroundColor: "#009FDB" }]} />
         <View
           style={[
             styles.half,
             {
               backgroundColor:
-                alignment === Alignment.RIGHT ? "#2196F3" : "#FFFFFF",
+                alignment === Alignment.RIGHT ? "#00338F" : "#FFFFFF",
             },
           ]}
         />
@@ -38,8 +38,8 @@ const SectionComponent: React.FC<SectionProps> = ({
         <LinearGradient
           colors={
             alignment === Alignment.RIGHT
-              ? ["#FFFFFF", "#BBDEFB"] // White to light blue for right alignment
-              : ["#2196F3", "#BBDEFB"] // Dark blue to light blue for left alignment
+              ? ["#FFFFFF", "#009FDB"] // White to light blue for right alignment
+              : ["#00338F", "#009FDB"] // Dark blue to light blue for left alignment
           }
           style={[
             { width: "100%", paddingHorizontal: 24, paddingVertical: 50 },
@@ -87,8 +87,8 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
   },
-  right: { borderBottomLeftRadius: 34, borderTopLeftRadius: 34 },
-  left: { borderBottomRightRadius: 34, borderTopRightRadius: 34 },
+  right: { borderBottomLeftRadius: 50, borderTopLeftRadius: 50 },
+  left: { borderBottomRightRadius: 50, borderTopRightRadius: 50 },
 });
 
 // Wrap the component in React.memo for performance optimization

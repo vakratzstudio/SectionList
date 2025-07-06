@@ -2,7 +2,7 @@ import React from "react";
 import { View, StyleSheet, Animated } from "react-native";
 
 // Generate a random height between 100 and 300 each render
-const getRandomHeight = () => Math.floor(Math.random() * 201) + 100;
+const getRandomHeight = () => 100; // Math.floor(Math.random() * 201) + 100;
 
 export const ShimmerCard: React.FC = () => {
   const height = React.useMemo(() => getRandomHeight(), []);
@@ -31,7 +31,7 @@ export const ShimmerCard: React.FC = () => {
   });
 
   return (
-    <View style={[styles.container, { height }]}> 
+    <View style={[styles.container, { height }]}>
       <Animated.View
         style={[
           styles.shimmer,
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     backgroundColor: "#e0e0e0",
-    borderRadius: 16,
+    borderRadius: 30,
     overflow: "hidden",
   },
   shimmer: {
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     width: 100,
     backgroundColor: "#f5f5f5",
     opacity: 0.6,
-    borderRadius: 16,
+    borderRadius: 30,
   },
 });
 
